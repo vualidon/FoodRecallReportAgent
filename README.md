@@ -6,7 +6,7 @@ A multi-agent system for analyzing and reporting on food recall news in the Unit
 
 This system utilizes LangChain and Google's Gemini LLM to:
 
-1. Collect food recall data from FDA API and USDA websites
+1. Collect food recall data from FDA and USDA websites
 2. Extract key information from recall announcements
 3. Analyze potential economic impact
 4. Generate comprehensive weekly reports
@@ -15,7 +15,7 @@ This system utilizes LangChain and Google's Gemini LLM to:
 
 The system consists of four specialized agents:
 
-- **Data Collection Agent**: Fetches recall data from FDA API and USDA websites
+- **Data Collection Agent**: Fetches recall data from FDA and USDA websites
 - **Information Extraction Agent**: Processes raw data to identify key details
 - **Economic Impact Agent**: Estimates financial consequences of recalls
 - **Reporting Agent**: Generates weekly reports ranking recalls by severity and impact
@@ -24,17 +24,8 @@ These agents are coordinated by an Orchestrator that manages the workflow.
 
 ## Data Sources
 
-- **FDA**: Uses the [openFDA API](https://open.fda.gov/apis/food/enforcement/) to collect structured food recall data
+- **FDA**: Web scraping of the FDA recalls page
 - **USDA**: Web scraping of the USDA FSIS recalls page
-
-## File Naming Convention
-
-The system uses a consistent file naming convention:
-
-- For FDA recalls: `fda_<report_date>_<unique_id>.json` where `report_date` is the date the recall was reported by the FDA (YYYYMMDD format)
-- For USDA recalls: `usda_<timestamp>_<unique_id>.json` where `timestamp` is the time of data collection (YYYYMMDDHHMMSS format)
-
-This approach ensures that FDA recall files can be easily sorted chronologically by their official report date.
 
 ## Installation
 
@@ -49,7 +40,8 @@ pip install -r requirements.txt
 
 ```
 GOOGLE_API_KEY=your_gemini_api_key
-FDA_API_KEY=your_fda_api_key
+TAVILY_API_KEY=tavily_key
+FIRECRAWL_API_KEY=firecrawl_key
 ```
 
 ## Usage
@@ -58,6 +50,7 @@ Run the orchestrator to execute the complete pipeline:
 
 ```
 python main.py
+python main.py --days 14
 ```
 
 Or run individual steps:
@@ -67,12 +60,6 @@ python main.py --step collect
 python main.py --step extract
 python main.py --step analyze
 python main.py --step report
-```
-
-To test the FDA API connection:
-
-```
-python test_fda_api.py
 ```
 
 ## Project Structure
@@ -93,7 +80,3 @@ python test_fda_api.py
 ├── test_fda_api.py        # FDA API test script
 └── README.md
 ```
-
-## License
-
-MIT
